@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lanzar Moneda</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #f0f4f8;
+    }
+
+    .coin {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .result {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="coin" id="coin"></div>
+  <div class="result" id="result">Presiona el botón para lanzar la moneda</div>
+  <button onclick="lanzarMoneda()">Lanzar Moneda</button>
+
+  <script>
+    const anversoURL = 'https://media.discordapp.net/attachments/1291133275506606124/1358480684884164678/Anverso5b.png?ex=67f3ff3a&is=67f2adba&hm=5a0abef37dd8f783f6e523b0fe5862a7a4c0b57e19ca82d7b5dee9028151791f&=&format=webp&quality=lossless';
+    const reversoURL = 'https://media.discordapp.net/attachments/1291133275506606124/1358480684632768562/Reverso5b.png?ex=67f3ff3a&is=67f2adba&hm=3c6b63e1852104cee028b5f1aa4af11415179a287313dfa2565f16d26ca05b48&=&format=webp&quality=lossless';
+
+    function lanzarMoneda() {
+      const coin = document.getElementById('coin');
+      const result = document.getElementById('result');
+
+      coin.style.transform = 'rotateY(720deg)';
+
+      setTimeout(() => {
+        const esCara = Math.random() < 0.5;
+        coin.style.backgroundImage = `url(${esCara ? anversoURL : reversoURL})`;
+        result.textContent = esCara ? '¡Salió Cara!' : '¡Salió Cruz!';
+        coin.style.transform = 'rotateY(0deg)';
+      }, 600);
+    }
+
+    document.getElementById('coin').style.backgroundImage = `url(${anversoURL})`;
+  </script>
+</body>
+</html>
