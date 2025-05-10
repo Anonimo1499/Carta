@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta para el Día de las Madres</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style id="app-style">
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #fff5f7;
+      background-image: url('https://cdn.pixabay.com/photo/2017/08/01/01/33/background-2562792_1280.jpg');
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+    }
+
+    .letter-container {
+      perspective: 1000px;
+    }
+
+    .envelope {
+      width: 300px;
+      height: 200px;
+      position: relative;
+      transition: transform 0.6s ease-in-out;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .envelope-front {
+      background-color: #ffb6c1;
+      border: 2px solid #ff8da1;
+      border-radius: 5px;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.5s ease;
+      overflow: hidden;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background-color: #ff8da1;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+      transition: transform 0.8s ease;
+      z-index: 2;
+    }
+
+    .envelope.open .envelope-flap {
+      transform: rotateX(180deg);
+    }
+
+    .letter {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      width: 80%;
+      height: 150px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 1s ease 0.5s;
+      z-index: 1;
+      opacity: 0;
+    }
+
+    .envelope.open .letter {
+      transform: translateX(-50%) translateY(-120px);
+      opacity: 1;
+    }
+
+    .message-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.8s ease;
+    }
+
+    .message-visible {
+      max-height: 1500px;
+    }
+
+    .message-content {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.25rem;
+      line-height: 1.6;
+      white-space: pre-line;
+      text-align: center;
+    }
+
+    .message-card {
+      background-color: white;
+      background-image: url('https://cdn.pixabay.com/photo/2017/10/31/15/32/flowers-2905542_1280.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .message-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 0;
+    }
+
+    .message-content-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    .emphasis {
+      font-weight: bold;
+      color: #d53f8c;
+    }
+
+    @media (min-width: 768px) {
+      .envelope {
+        width: 350px;
+        height: 230px;
+      }
+      
+      .letter {
+        height: 180px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .envelope {
+        width: 400px;
+        height: 260px;
+      }
+      
+      .letter {
+        height: 200px;
+      }
+    }
+
+    .loading-spinner {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #d53f8c;
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .buttons-container button {
+      transition: all 0.3s ease;
+    }
+
+    .buttons-container button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container mx-auto px-4 py-8 flex justify-center">
+    <!-- Carta y animación -->
+    <div class="letter-container mb-8 lg:mb-0">
+      <div class="envelope mx-auto" id="envelope">
+        <div class="envelope-front">
+          <div class="envelope-flap"></div>
+          <i class="fas fa-heart text-pink-500 text-4xl"></i>
+        </div>
+        <div class="letter flex items-center justify-center bg-white">
+          <div class="loading-spinner" id="loading-spinner"></div>
+          <i class="fas fa-envelope-open text-pink-500 text-4xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de la carta (inicialmente oculto) -->
+  <div class="message-container mt-8" id="message-container">
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden message-card">
+      <div class="p-6 md:p-8 message-content-wrapper">
+        <div class="message-content" id="message-content">
+          <!-- El contenido del mensaje se generará dinámicamente -->
+        </div>
+        <div class="text-right mt-6">
+          <p class="text-lg font-medium text-pink-600"></p>
+          <p class="text-lg"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script id="app-script">
+    document.addEventListener('DOMContentLoaded', function() {
+      const envelope = document.getElementById('envelope');
+      const messageContainer = document.getElementById('message-container');
+      const messageContent = document.getElementById('message-content');
+      const loadingSpinner = document.getElementById('loading-spinner');
+
+      let messageGenerated = false;
+
+      // Fixed message:
+      const fixedMessage = `
+Hoy no es un día cualquiera. Hoy es el Día de las Madres… pero para mí, cada día contigo ya es un regalo.
+Porque tú no solo me diste la vida, me diste amor incluso cuando no sabía cómo pedirlo, me diste fuerza incluso cuando sentía que no podía más, y me diste tu sonrisa, esa que calma el alma como ninguna otra.
+
+Gracias por estar, por escucharme, por regañarme cuando era necesario y por abrazarme sin pedir nada a cambio.
+Gracias por tus sacrificios silenciosos, por tus desvelos, por todo lo que hiciste sin que yo siquiera lo notara.
+Gracias por enseñarme a ser valiente, aunque a veces me sienta perdido.
+
+Eres el corazón que sostiene mi mundo.
+Eres el refugio al que siempre puedo volver.
+Y aunque no siempre sepa cómo decirlo, te quiero con todo lo que soy.
+
+Feliz Día, mamá.
+Hoy te celebro, pero sobre todo, te agradezco.
+Porque sin ti… yo no sería yo…
+`;
+
+      // Abrir sobre al hacer clic
+      envelope.addEventListener('click', async function() {
+        if (messageGenerated) {
+          envelope.classList.add('open');
+          return setTimeout(() => messageContainer.classList.add('message-visible'), 1000);
+        }
+
+        // first-time (only) generation
+        loadingSpinner.style.display = 'block';
+        try {
+          messageContent.innerHTML = fixedMessage;
+          
+          messageGenerated = true;
+          envelope.classList.add('animate-pulse');
+          setTimeout(()=> envelope.classList.remove('animate-pulse'), 1000);
+          alert('¡Carta lista! Haz clic de nuevo en el sobre para abrirla.');
+        } catch (error) {
+          console.error(error);
+        } finally {
+          loadingSpinner.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
