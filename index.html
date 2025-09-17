@@ -30,7 +30,8 @@
 </head>
 <body>
     <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/yQbBLhNYA3w?autoplay=1&mute=0&controls=0&showinfo=0&rel=0&loop=1" 
+        <iframe id="videoFrame"
+                src="https://www.youtube.com/embed/OAoaeEklM6o?autoplay=1&mute=0&controls=0&showinfo=0&rel=0&loop=1" 
                 frameborder="0" 
                 allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen>
@@ -38,9 +39,17 @@
     </div>
 
     <script>
-        // Si necesitas agregar algún script, puedes hacerlo aquí
-        // Por ejemplo, para garantizar el autoplay en algunos navegadores,
-        // puedes usar un pequeño truco con un evento de clic.
+        const videoFrame = document.getElementById('videoFrame');
+
+        document.body.addEventListener('click', function() {
+            const currentSrc = videoFrame.src;
+            if (!currentSrc.includes('autoplay=1')) {
+                const newSrc = currentSrc.includes('?') 
+                    ? currentSrc + '&autoplay=1' 
+                    : currentSrc + '?autoplay=1';
+                videoFrame.src = newSrc;
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
